@@ -1,7 +1,7 @@
 // API ендпоінти:
 
 import axios from 'axios';
-import { BASE_URL, ENDPOINTS } from './constants';
+import { BASE_URL, ENDPOINTS, LIMIT } from './constants';
 
 // https://dummyjson.com/docs/products - документація бекенду, розділ продукти
 // https://dummyjson.com/products?limit=10&skip=10 - отримати всі продукти з пагінацією
@@ -14,5 +14,21 @@ axios.defaults.baseURL = BASE_URL;
 
 export async function fetchCategories() {
   const { data } = await axios(ENDPOINTS.categories);
+  return data;
+}
+
+export async function fetchAllProducts(page = 1) {
+  //const { data } = await axios.get(`${ENDPOINTS.products}?limit=${LIMIT}&skip=${(page - 1) * LIMIT}`)
+  const { data } = await axios.get(ENDPOINTS.products, {
+    params: {
+      limit: LIMIT,
+      skip: (page - 1) * LIMIT
+    }
+  })
+  return data;
+}
+
+export async function fetchProductsByCategory(category) {
+  const { data } = await axios.get(`${ENDPOINTS.productsByCategory}${category}`);
   return data;
 }
